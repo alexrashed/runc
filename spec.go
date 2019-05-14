@@ -180,15 +180,6 @@ func loadSpec(cPath string) (spec *specs.Spec, err error) {
 			GID: &gid0,
 		},
 		{
-			Path: "/dev/nvmap",
-			Type: "c",
-			Major: 10,
-			Minor: 61,
-			FileMode: &fileMode,
-			UID: &uid0,
-			GID: &gid44,
-		},
-		{
 			Path: "/dev/nvhost-gpu",
 			Type: "c",
 			Major: 506,
@@ -206,14 +197,68 @@ func loadSpec(cPath string) (spec *specs.Spec, err error) {
 			UID: &uid0,
 			GID: &gid44,
 		},
+		{
+			Path: "/dev/nvmap",
+			Type: "c",
+			Major: 10,
+			Minor: 61,
+			FileMode: &fileMode,
+			UID: &uid0,
+			GID: &gid44,
+		},
 	}
 	spec.Linux.Devices = append(spec.Linux.Devices, additionalDevices...)
+	additionalDeviceResources := []specs.LinuxDeviceCgroup{
+		{
+			Access: "rwm",
+			Allow: true,
+			Major: createPointer(242),
+			Minor: createPointer(0),
+			Type: "c",
+		},
+		{
+			Access: "rwm",
+			Allow: true,
+			Major: createPointer(506),
+			Minor: createPointer(2),
+			Type: "c",
+		},
+		{
+			Access: "rwm",
+			Allow: true,
+			Major: createPointer(506),
+			Minor: createPointer(4),
+			Type: "c",
+		},
+		{
+			Access: "rwm",
+			Allow: true,
+			Major: createPointer(506),
+			Minor: createPointer(0),
+			Type: "c",
+		},
+		{
+			Access: "rwm",
+			Allow: true,
+			Major: createPointer(506),
+			Minor: createPointer(1),
+			Type: "c",
+		},
+	}
+	spec.Linux.Resources.Devices = append(spec.Linux.Resources.Devices, additionalDeviceResources...)
 
 	// add LD_LIBRARY_PATH
 	spec.Process.Env = append(spec.Process.Env, "LD_LIBRARY_PATH=:/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/lib64")
 
 	return spec, validateProcessSpec(spec.Process)
 }
+
+// Hack Helper Function
+// https://stackoverflow.com/questions/30716354/how-do-i-do-a-literal-int64-in-go
+func createPointer(x int64) *int64 {
+	return &x
+}
+
 
 func createLibContainerRlimit(rlimit specs.POSIXRlimit) (configs.Rlimit, error) {
 	rl, err := strToRlimit(rlimit.Type)
