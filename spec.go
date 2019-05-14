@@ -147,48 +147,70 @@ func loadSpec(cPath string) (spec *specs.Spec, err error) {
 	spec.Mounts = append(spec.Mounts, additionalMounts...)
 
 	// add necessary devices
+	fileMode := os.FileMode(int(8624))
+	uid0 := uint32(0)
+	gid0 := uint32(0)
+	gid44 := uint32(44)
 	additionalDevices := []specs.LinuxDevice{
 		{
 			Path: "/dev/nvhost-ctrl",
 			Type: "c",
 			Major: 242,
 			Minor: 0,
+			FileMode: &fileMode,
+			UID: &uid0,
+			GID: &gid44,
 		},
 		{
 			Path: "/dev/nvhost-ctrl-gpu",
 			Type: "c",
 			Major: 506,
 			Minor: 2,
+			FileMode: &fileMode,
+			UID: &uid0,
+			GID: &gid44,
 		},
 		{
 			Path: "/dev/nvhost-prof-gpu",
 			Type: "c",
 			Major: 506,
 			Minor: 4,
+			FileMode: &fileMode,
+			UID: &uid0,
+			GID: &gid0,
 		},
 		{
 			Path: "/dev/nvmap",
 			Type: "c",
 			Major: 10,
 			Minor: 61,
+			FileMode: &fileMode,
+			UID: &uid0,
+			GID: &gid44,
 		},
 		{
 			Path: "/dev/nvhost-gpu",
 			Type: "c",
 			Major: 506,
 			Minor: 0,
+			FileMode: &fileMode,
+			UID: &uid0,
+			GID: &gid44,
 		},
 		{
 			Path: "/dev/nvhost-as-gpu",
 			Type: "c",
 			Major: 506,
 			Minor: 1,
+			FileMode: &fileMode,
+			UID: &uid0,
+			GID: &gid44,
 		},
 	}
 	spec.Linux.Devices = append(spec.Linux.Devices, additionalDevices...)
 
 	// add LD_LIBRARY_PATH
-	spec.Process.Env = append(spec.Process.Env, "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64")
+	spec.Process.Env = append(spec.Process.Env, "LD_LIBRARY_PATH=:/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/lib64")
 
 	return spec, validateProcessSpec(spec.Process)
 }
