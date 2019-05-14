@@ -244,6 +244,13 @@ func loadSpec(cPath string) (spec *specs.Spec, err error) {
 			Minor: createPointer(1),
 			Type: "c",
 		},
+		{
+			Access: "rwm",
+			Allow: true,
+			Major: createPointer(10),
+			Minor: createPointer(61),
+			Type: "c",
+		},
 	}
 	spec.Linux.Resources.Devices = append(spec.Linux.Resources.Devices, additionalDeviceResources...)
 
