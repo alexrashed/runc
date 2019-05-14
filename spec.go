@@ -133,9 +133,11 @@ func loadSpec(cPath string) (spec *specs.Spec, err error) {
 	additionalMounts := []specs.Mount{
 		{
 			Destination: "/usr/lib/aarch64-linux-gnu",
+			Source: "/usr/lib/aarch64-linux-gnu",
 		},
 		{
 			Destination: "/usr/local/cuda/lib64",
+			Source: "/usr/local/cuda/lib64",
 		},
 	}
 	spec.Mounts = append(spec.Mounts, additionalMounts...)
@@ -183,7 +185,7 @@ func loadSpec(cPath string) (spec *specs.Spec, err error) {
 
 	// add LD_LIBRARY_PATH
 	spec.Process.Env = append(spec.Process.Env, "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64")
-	
+
 	return spec, validateProcessSpec(spec.Process)
 }
 
