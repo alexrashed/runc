@@ -134,10 +134,14 @@ func loadSpec(cPath string) (spec *specs.Spec, err error) {
 		{
 			Destination: "/usr/lib/aarch64-linux-gnu",
 			Source: "/usr/lib/aarch64-linux-gnu",
+			Type: "bind",
+			Options: []string{"rbind", "rprivate"},
 		},
 		{
 			Destination: "/usr/local/cuda/lib64",
 			Source: "/usr/local/cuda/lib64",
+			Type: "bind",
+			Options: []string{"rbind", "rprivate"},
 		},
 	}
 	spec.Mounts = append(spec.Mounts, additionalMounts...)
