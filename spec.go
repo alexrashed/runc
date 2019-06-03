@@ -12,6 +12,8 @@ import (
 	"github.com/opencontainers/runc/libcontainer/specconv"
 	"github.com/opencontainers/runtime-spec/specs-go"
 	"github.com/urfave/cli"
+
+//	"strings"
 )
 
 var specCommand = cli.Command{
@@ -143,6 +145,12 @@ func loadSpec(cPath string) (spec *specs.Spec, err error) {
 			Type: "bind",
 			Options: []string{"rbind", "rprivate"},
 		},
+		{
+			Destination: "/usr/local/cuda-10.0/lib64",
+			Source: "/usr/local/cuda-10.0/lib64",
+			Type: "bind",
+			Options: []string{"rbind", "rprivate"},
+		},
 	}
 	spec.Mounts = append(spec.Mounts, additionalMounts...)
 
@@ -253,9 +261,6 @@ func loadSpec(cPath string) (spec *specs.Spec, err error) {
 		},
 	}
 	spec.Linux.Resources.Devices = append(spec.Linux.Resources.Devices, additionalDeviceResources...)
-
-	// add LD_LIBRARY_PATH
-	spec.Process.Env = append(spec.Process.Env, "LD_LIBRARY_PATH=:/usr/lib/aarch64-linux-gnu:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/lib64")
 
 	return spec, validateProcessSpec(spec.Process)
 }
